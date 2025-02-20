@@ -5,6 +5,7 @@
 '''
 import requests
 
+
 def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
     '''fetches all hot posts in a subreddit
     Return:
