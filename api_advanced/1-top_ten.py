@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-Function to print hot posts on a given Reddit subreddit.
+Function that queries the Reddit API and prints the titles of the first 10 hot posts listed for a given subreddit.
+If the subreddit is invalid, it prints "None".
 """
 import requests
 import sys
