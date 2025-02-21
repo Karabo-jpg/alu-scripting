@@ -10,7 +10,9 @@ def top_ten(subreddit):
 
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
     headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+        "User-Agent": (
+            "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+        )
     }
     params = {
         "limit": 10
@@ -21,12 +23,12 @@ def top_ten(subreddit):
         url, headers=headers, params=params, allow_redirects=False
     )
 
-    # Check if the subreddit is valid (status code 404 indicates not found)
+    # Check if the subreddit exists by checking status code
     if response.status_code == 404:
         print("None")
         return
 
-    # Check if the response was successful
+    # Check for successful response
     if response.status_code != 200:
         print("None")
         return
@@ -53,11 +55,11 @@ def top_ten(subreddit):
             print(title)
 
     except (ValueError, KeyError):
-        # In case of any parsing errors, print "None"
+        # If parsing or data extraction fails, print "None"
         print("None")
 
 
-# Ensure that if the script is called directly, it receives a subreddit argument
+# Main guard to ensure it runs when called directly
 if __name__ == "__main__":
     import sys
     if len(sys.argv) < 2:
