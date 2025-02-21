@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-"""Function to print hot posts on a given Reddit subreddit."""
-
+"""
+Function to print hot posts on a given Reddit subreddit.
+"""
 import requests
 
 
@@ -41,7 +42,7 @@ def top_ten(subreddit):
 
         children = data['data']['children']
 
-        # If there are no children, print "None"
+        # If there are no posts in the subreddit, print "None"
         if not children:
             print("None")
             return
@@ -60,4 +61,6 @@ def top_ten(subreddit):
 if __name__ == "__main__":
     import sys
     if len(sys.argv) < 2:
-        print
+        print("Please pass an argument for the subreddit to search.")
+    else:
+        top_ten(sys.argv[1])
