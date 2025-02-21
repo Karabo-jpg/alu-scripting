@@ -28,7 +28,7 @@ def top_ten(subreddit):
         print("None")
         return
 
-    # Check for successful response
+    # Check for successful response (status code 200)
     if response.status_code != 200:
         print("None")
         return
