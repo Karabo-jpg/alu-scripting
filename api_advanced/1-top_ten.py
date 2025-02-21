@@ -12,10 +12,32 @@ def top_ten(subreddit):
     params = {
         "limit": 10
     }
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
+    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
+    
+    # If subreddit doesn't exist, print "None"
     if response.status_code == 404:
         print("None")
         return
-    results = response.json().get("data")
-    [print(c.get("data").get("title")) for c in results.get("children")]
+    
+    # If the response is empty or invalid, print "None"
+    if response.status_code != 200 or not response.text.strip():
+        print("None")
+        return
+    
+    try:
+        # Try to parse the response JSON
+        results = response.json().get("data", {})
+        children = results.get("children", [])
+
+        # If there are no posts, print "None"
+        if not children:
+            print("None")
+            return
+        
+        # Print the titles of the 10 hottest posts
+        for post in children:
+            print(post.get("data", {}).get("title", "No Title"))
+    
+    except ValueError:
+        # If the response is not a valid JSON, print "None"
+        print("None")
