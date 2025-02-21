@@ -1,68 +1,41 @@
 #!/usr/bin/python3
 """
-Function to print hot posts on a given Reddit subreddit.
+Function to print the titles of the first 10 hot posts on a given subreddit.
 """
 import requests
 
 
 def top_ten(subreddit):
-    """Print the titles of the 10 hottest posts on a given subreddit."""
-
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    """
+    Queries the Reddit API and prints the titles of the first 10 hot posts
+    listed for a given subreddit.
+    """
+    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
     headers = {
-        "User-Agent": (
-            "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
-        )
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
     }
-    params = {
-        "limit": 10
-    }
+    params = {"limit": 10}
 
-    # Send the GET request to Reddit API
-    response = requests.get(
-        url, headers=headers, params=params, allow_redirects=False
-    )
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
 
-    # Check if the subreddit exists by checking the response status code
-    if response.status_code == 404:
-        print("OK", end="")
-        return
-
-    # Check for successful response (status code 200)
+    # If subreddit does not exist or request fails, print "None"
     if response.status_code != 200:
-        print("OK", end="")
+        print("None")
         return
 
     try:
-        # Parse the JSON response
-        data = response.json()
+        data = response.json().get("data", {})
+        children = data.get("children", [])
 
-        # Ensure the expected structure is present
-        if 'data' not in data or 'children' not in data['data']:
-            print("OK", end="")
-            return
-
-        children = data['data']['children']
-
-        # If there are no posts in the subreddit, print "None"
+        # If no posts are found, print "None"
         if not children:
-            print("OK", end="")
+            print("None")
             return
 
-        # Print the titles of the posts
+        # Print the titles of the first 10 posts
         for post in children:
-            title = post.get('data', {}).get('title', 'No Title')
-            print(title)
+            print(post["data"]["title"])
 
-    except (ValueError, KeyError):
-        # If parsing or data extraction fails, print "None"
-        print("OK", end="")
-
-
-# Main guard to ensure it runs when called directly
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
-    else:
-        top_ten(sys.argv[1])
+    except (KeyError, ValueError):
+        print("None", end="")  # Fix for extra newline issue
