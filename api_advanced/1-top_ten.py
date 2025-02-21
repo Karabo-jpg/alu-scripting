@@ -25,7 +25,7 @@ def top_ten(subreddit):
         print("None")
         return
 
-    # Check for any invalid or empty response
+    # Check for a valid response and if the response is empty
     if response.status_code != 200 or not response.text.strip():
         print("None")
         return
