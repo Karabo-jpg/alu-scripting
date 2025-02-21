@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """Function to print hot posts on a given Reddit subreddit."""
+
 import requests
 
 
 def top_ten(subreddit):
     """Print the titles of the 10 hottest posts on a given subreddit."""
+
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
     headers = {
         "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
@@ -14,7 +16,9 @@ def top_ten(subreddit):
     }
 
     # Send the GET request to Reddit API
-    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
+    response = requests.get(
+        url, headers=headers, params=params, allow_redirects=False
+    )
 
     # Check if the subreddit is valid (status code 404 indicates not found)
     if response.status_code == 404:
@@ -30,18 +34,12 @@ def top_ten(subreddit):
         # Parse the JSON response
         data = response.json()
 
-        # Debugging: Check the structure of the data
-        # print("DEBUG: Response Data:", data)
-
         # Ensure the expected structure is present
         if 'data' not in data or 'children' not in data['data']:
             print("None")
             return
 
         children = data['data']['children']
-
-        # Debugging: Check the children data
-        # print("DEBUG: Children Data:", children)
 
         # If there are no children, print "None"
         if not children:
@@ -62,6 +60,4 @@ def top_ten(subreddit):
 if __name__ == "__main__":
     import sys
     if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
-    else:
-        top_ten(sys.argv[1])
+        print
