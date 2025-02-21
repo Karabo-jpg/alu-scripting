@@ -16,7 +16,7 @@ def top_ten(subreddit):
         "limit": 10
     }
 
-    # Requesting the subreddit data from Reddit
+    # Request subreddit data from Reddit with no redirects
     response = requests.get(
         url, headers=headers, params=params, allow_redirects=False
     )
@@ -26,24 +26,23 @@ def top_ten(subreddit):
         print("None")
         return
 
-    # Handle invalid JSON or empty responses
-    if response.status_code != 200 or not response.text.strip():
+    # Handle unsuccessful request (non-200 status codes)
+    if response.status_code != 200:
         print("None")
         return
 
     try:
-        # Try to parse the JSON data
+        # Try to parse the JSON response
         data = response.json()
 
-        # If 'data' or 'children' is missing, print "None"
+        # Check if the expected data and children are in the response
         if "data" not in data or "children" not in data["data"]:
             print("None")
             return
 
-        # Extract the children (posts) from the response
         children = data["data"]["children"]
 
-        # If there are no posts, print "None"
+        # If there are no posts, print None
         if not children:
             print("None")
             return
@@ -54,5 +53,5 @@ def top_ten(subreddit):
             print(title)
 
     except ValueError:
-        # Handle case where the response is not valid JSON
+        # Handle JSON parsing errors
         print("None")
