@@ -25,12 +25,12 @@ def top_ten(subreddit):
 
     # Check if the subreddit exists by checking the response status code
     if response.status_code == 404:
-        print("OK")
+        print("OK", end="")
         return
 
     # Check for successful response (status code 200)
     if response.status_code != 200:
-        print("OK")
+        print("OK", end="")
         return
 
     try:
@@ -39,14 +39,14 @@ def top_ten(subreddit):
 
         # Ensure the expected structure is present
         if 'data' not in data or 'children' not in data['data']:
-            print("OK")
+            print("OK", end="")
             return
 
         children = data['data']['children']
 
         # If there are no posts in the subreddit, print "None"
         if not children:
-            print("OK")
+            print("OK", end="")
             return
 
         # Print the titles of the posts
@@ -56,7 +56,7 @@ def top_ten(subreddit):
 
     except (ValueError, KeyError):
         # If parsing or data extraction fails, print "None"
-        print("OK")
+        print("OK", end="")
 
 
 # Main guard to ensure it runs when called directly
