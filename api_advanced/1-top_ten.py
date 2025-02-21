@@ -17,22 +17,22 @@ def top_ten(subreddit):
     response = requests.get(url, headers=headers, params=params,
                             allow_redirects=False)
 
-    # Check if the subreddit does not exist
+    # If the subreddit doesn't exist (404), print "None"
     if response.status_code == 404:
         print("None")
         return
 
-    # Check if the response is empty or invalid
+    # If the response is not valid or empty, print "None"
     if response.status_code != 200 or not response.text.strip():
         print("None")
         return
 
     try:
-        # Parse the response JSON
+        # Try to parse the response JSON
         results = response.json().get("data", {})
         children = results.get("children", [])
 
-        # Check if there are no posts in the subreddit
+        # If there are no posts in the subreddit, print "None"
         if not children:
             print("None")
             return
