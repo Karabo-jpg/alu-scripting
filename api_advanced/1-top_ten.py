@@ -10,32 +10,31 @@ def top_ten(subreddit):
     Queries the Reddit API and prints the titles of the first 10 hot posts
     listed for a given subreddit.
     """
-    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
-    headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
-    }
-    params = {"limit": 10}
-
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
-
-    # If subreddit does not exist or request fails, print "None"
-    if response.status_code != 200:
+    if not isinstance(subreddit, str) or subreddit == "":
         print("None")
         return
 
+    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
+    headers = {"User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"}
+    params = {"limit": 10}
+
     try:
+        response = requests.get(url, headers=headers, params=params,
+                                allow_redirects=False, timeout=5)
+
+        if response.status_code != 200:
+            print("None")
+            return
+
         data = response.json().get("data", {})
         children = data.get("children", [])
 
-        # If no posts are found, print "None"
         if not children:
             print("None")
             return
 
-        # Print the titles of the first 10 posts
         for post in children:
-            print(post["data"]["title"])
+            print(post["data"].get("title", "None"))
 
-    except (KeyError, ValueError):
-        print("None", end="")  # Fix for extra newline issue
+    except (requests.RequestException, KeyError, ValueError):
+        print("None")
