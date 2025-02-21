@@ -14,23 +14,28 @@ def top_ten(subreddit):
     }
 
     # Requesting the subreddit data from Reddit
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
+    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
 
-    # If the subreddit doesn't exist (404), print "None"
+    # Check for non-existent subreddit (404 error)
     if response.status_code == 404:
         print("None")
         return
 
-    # If the response is not valid or empty, print "None"
+    # Check for any invalid or empty response
     if response.status_code != 200 or not response.text.strip():
         print("None")
         return
 
     try:
-        # Try to parse the response JSON
-        results = response.json().get("data", {})
-        children = results.get("children", [])
+        # Try to parse the JSON data
+        data = response.json()
+
+        # If 'data' or 'children' is missing, print "None"
+        if "data" not in data or "children" not in data["data"]:
+            print("None")
+            return
+
+        children = data["data"]["children"]
 
         # If there are no posts in the subreddit, print "None"
         if not children:
@@ -39,8 +44,9 @@ def top_ten(subreddit):
 
         # Print the titles of the 10 hottest posts
         for post in children:
-            print(post.get("data", {}).get("title", "No Title"))
+            title = post.get("data", {}).get("title", "No Title")
+            print(title)
 
     except ValueError:
-        # If the response is not a valid JSON, print "None"
+        # Handle case where the response is not valid JSON
         print("None")
