@@ -7,50 +7,49 @@ import requests
 def top_ten(subreddit):
     """Print the titles of the 10 hottest posts on a given subreddit."""
 
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    # Construct the URL for the given subreddit
+    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
+    
+    # Set headers to avoid being blocked by Reddit's API
     headers = {
         "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
     }
+    
+    # Parameters to limit the response to the top 10 posts
     params = {
         "limit": 10
     }
 
-    # Requesting the subreddit data from Reddit
-    response = requests.get(
-        url, headers=headers, params=params, allow_redirects=False
-    )
+    # Make the GET request without following redirects
+    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
 
-    # Check for non-existent subreddit (404 error)
+    # Handle non-existent subreddit (404 status code)
     if response.status_code == 404:
         print("None")
         return
 
-    # Check for a valid response and if the response is empty
-    if response.status_code != 200 or not response.text.strip():
+    # If the status code isn't 200 or there's an issue with the response, print None
+    if response.status_code != 200:
         print("None")
         return
 
     try:
-        # Try to parse the JSON data
+        # Parse the response JSON
         data = response.json()
 
-        # If 'data' or 'children' is missing, print "None"
-        if "data" not in data or "children" not in data["data"]:
-            print("None")
-            return
+        # Ensure 'data' and 'children' are in the response
+        children = data.get('data', {}).get('children', [])
 
-        children = data["data"]["children"]
-
-        # If there are no posts in the subreddit, print "None"
+        # If there are no posts or children, print None
         if not children:
             print("None")
             return
 
-        # Print the titles of the 10 hottest posts
+        # Print the titles of the top 10 hot posts
         for post in children:
-            title = post.get("data", {}).get("title", "No Title")
+            title = post.get('data', {}).get('title', 'No Title')
             print(title)
 
     except ValueError:
-        # Handle case where the response is not valid JSON
+        # Handle JSON decoding errors and print None
         print("None")
