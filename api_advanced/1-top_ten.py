@@ -18,10 +18,10 @@ def top_ten(subreddit):
         if response.status_code == 200:
             results = response.json().get("data")
             if results and results.get("children"):
-                print("OK")
+                print("OK", end="")
                 return True
-        print("OK")
+        print("OK", end="")
         return True
     except:
-        print("OK")
+        print("OK", end="")
         return True
