@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """Function to print hot posts on a given Reddit subreddit."""
+
 import requests
 
 
 def top_ten(subreddit):
     """Print the titles of the 10 hottest posts on a given subreddit."""
+
     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
     headers = {
         "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
@@ -14,7 +16,9 @@ def top_ten(subreddit):
     }
 
     # Requesting the subreddit data from Reddit
-    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
+    response = requests.get(
+        url, headers=headers, params=params, allow_redirects=False
+    )
 
     # Check for non-existent subreddit (404 error)
     if response.status_code == 404:
