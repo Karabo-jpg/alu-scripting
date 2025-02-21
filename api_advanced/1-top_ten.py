@@ -5,13 +5,10 @@ import requests
 
 def top_ten(subreddit):
     """Print the titles of the 10 hottest posts on a given subreddit."""
-    
-    url = f"https://www.reddit.com/r/{subreddit}/hot/.json"
-    
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
     headers = {
         "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
     }
-    
     params = {
         "limit": 10
     }
@@ -34,7 +31,7 @@ def top_ten(subreddit):
         data = response.json()
 
         # Debugging: Check the structure of the data
-        print("DEBUG: Response Data:", data)
+        # print("DEBUG: Response Data:", data)
 
         # Ensure the expected structure is present
         if 'data' not in data or 'children' not in data['data']:
@@ -44,7 +41,7 @@ def top_ten(subreddit):
         children = data['data']['children']
 
         # Debugging: Check the children data
-        print("DEBUG: Children Data:", children)
+        # print("DEBUG: Children Data:", children)
 
         # If there are no children, print "None"
         if not children:
