@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 This script fetches and prints the titles of the 10 hottest posts from a given subreddit.
-It handles both existing and non-existent subreddits by printing appropriate messages.
+If the subreddit exists, the titles of the 10 hottest posts are printed. If the subreddit doesn't exist, 'None' is printed.
 """
 
 import requests
@@ -16,32 +16,31 @@ def top_ten(subreddit):
     params = {
         "limit": 10
     }
+    
     response = requests.get(url, headers=headers, params=params, allow_redirects=False)
 
-    # Check if the subreddit exists (status code 404 indicates non-existent subreddit)
     if response.status_code == 404:
+        # Subreddit not found
         print("None")
         return
-
-    # Check if the response is valid (status code 200 means success)
+    
     if response.status_code != 200:
+        # Handle other status codes, such as server errors
         print("None")
         return
-
+    
     try:
-        # Parse JSON data
         results = response.json().get("data", {})
         children = results.get("children", [])
 
-        # If there are no posts, print "None"
         if not children:
+            # No posts found
             print("None")
             return
 
-        # Print the titles of the 10 hottest posts
         for post in children:
             print(post.get("data", {}).get("title", "No Title"))
-    
+
     except ValueError:
-        # In case the JSON is invalid, print "None"
+        # JSON parsing error
         print("None")
