@@ -1,4 +1,11 @@
+#!/usr/bin/python3
+"""
+This script fetches and prints the titles of the 10 hottest posts from a given subreddit.
+It handles both existing and non-existent subreddits by printing appropriate messages.
+"""
+
 import requests
+
 
 def top_ten(subreddit):
     """Print the titles of the 10 hottest posts on a given subreddit."""
@@ -17,17 +24,21 @@ def top_ten(subreddit):
         return
     
     # Check if the response contains valid JSON
-    try:
-        results = response.json().get("data")
-    except ValueError:
-        print("None")
-        return
-    
-    # Check if there are any posts
-    if not results or 'children' not in results:
+    if response.status_code != 200:
         print("None")
         return
 
-    # Print the titles of the 10 hottest posts
-    for post in results.get("children", []):
-        print(post.get("data", {}).get("title", "No Title"))
+    try:
+        results = response.json().get("data", {})
+        children = results.get("children", [])
+        
+        if not children:
+            print("None")
+            return
+        
+        # Print the titles of the 10 hottest posts
+        for post in children:
+            print(post.get("data", {}).get("title", "No Title"))
+    
+    except ValueError:
+        print("None")
