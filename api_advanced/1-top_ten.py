@@ -22,23 +22,26 @@ def top_ten(subreddit):
     if response.status_code == 404:
         print("None")
         return
-    
-    # Check if the response contains valid JSON
+
+    # Check if the response is valid (status code 200 means success)
     if response.status_code != 200:
         print("None")
         return
 
     try:
+        # Parse JSON data
         results = response.json().get("data", {})
         children = results.get("children", [])
-        
+
+        # If there are no posts, print "None"
         if not children:
             print("None")
             return
-        
+
         # Print the titles of the 10 hottest posts
         for post in children:
             print(post.get("data", {}).get("title", "No Title"))
     
     except ValueError:
+        # In case the JSON is invalid, print "None"
         print("None")
